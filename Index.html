@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101114">
+<title>My Bullet Dream</title>
+<style>
+:root{color-scheme:dark;--bg:#101114;--panel:#1a1c21;--muted:#a7abb4;--line:#30333b;--green:#70d69a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#252932 0,#101114 58%);color:#f5f5f5;font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+main{max-width:520px;margin:auto;padding:18px 15px 40px}.hero{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#17191e;box-shadow:0 18px 50px #0007}
+.photo{height:230px;background:linear-gradient(135deg,#292d35,#111318);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:none}.photo .placeholder{text-align:center;color:#c2c5cc;padding:20px}.photo .placeholder strong{display:block;font-size:22px;margin-top:8px}
+.photo label{position:absolute;right:12px;bottom:12px;background:#111d;color:#fff;border:1px solid #ffffff55;padding:9px 12px;border-radius:12px;font-size:13px;cursor:pointer}
+.content{padding:20px}.eyebrow{font-size:12px;letter-spacing:2px;color:var(--muted);font-weight:700}.amount{font-size:38px;font-weight:800;letter-spacing:-1px;margin:7px 0 0}.muted{color:var(--muted);font-size:13px}.bar{height:12px;border-radius:20px;background:#343740;overflow:hidden;margin:16px 0 8px}.fill{height:100%;width:0;background:linear-gradient(90deg,#43b978,#9ce7b8);border-radius:20px;transition:width .25s}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}.stat small{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.stat b{font-size:19px;overflow-wrap:anywhere}
+h2{font-size:17px;margin:22px 0 10px}.panel{margin-top:14px}.field{display:flex;gap:8px}.field input{min-width:0;flex:1}
+input{width:100%;padding:13px 12px;border-radius:12px;border:1px solid var(--line);background:#101216;color:white;font-size:16px}
+button{border:0;border-radius:12px;padding:13px 15px;background:var(--green);color:#102018;font-weight:800;font-size:15px;cursor:pointer}
+button.secondary{background:#30343d;color:#f3f4f6}button.danger{background:#44282b;color:#ffdfe2}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1;font-size:13px;padding:11px 9px}
+.history{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.history:last-child{border:0}.plus{color:var(--green);font-weight:700}.minus{color:#ff9a9a;font-weight:700}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin:16px 3px}.top{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 14px}.top strong{letter-spacing:1.5px}.pill{font-size:11px;color:var(--green);border:1px solid #397c56;padding:5px 8px;border-radius:20px}
+@media(max-width:380px){.amount{font-size:32px}.photo{height:190px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><strong>MY BULLET DREAM</strong><span class="pill">PERSONAL TRACKER</span></div>
+  <section class="hero">
+    <div class="photo">
+      <img id="bikePhoto" alt="Your Bullet photo">
+      <div class="placeholder" id="placeholder">🏍️<strong>Your dream ride</strong><span class="muted">Add your Bullet photo</span></div>
+      <label for="photoInput">Change photo</label>
+      <input id="photoInput" type="file" accept="image/*" hidden>
+    </div>
+    <div class="content">
+      <div class="eyebrow">TOTAL SAVED</div>
+      <div class="amount" id="saved">₹0</div>
+      <div class="muted" id="percent">0% of your target</div>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <div class="muted" id="remainingText">₹1,44,000 left to your dream</div>
+      <div class="stats">
+        <div class="stat"><small>TARGET</small><b id="targetLabel">₹1,44,000</b></div>
+        <div class="stat"><small>REMAINING</small><b id="remaining">₹1,44,000</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 style="margin-top:0">Set your target</h2>
+    <div class="field"><input id="targetInput" type="number" min="1" placeholder="Target amount"><button id="saveTarget">Save</button></div>
+    <h2>Add money you saved</h2>
+    <div class="field"><input id="depositInput" type="number" min="1" placeholder="Amount (e.g. 500)" inputmode="numeric"><button id="addDeposit">+ Add</button></div>
+    <div class="muted" style="margin-top:8px">Only a manual record. No money is transferred or deposited.</div>
+  </section>
+
+  <section class="panel">
+    <h2 style="margin-top:0">Savings history</h2>
+    <div id="history"><div class="muted">Your entries will appear here.</div></div>
+    <div class="actions">
+      <button class="secondary" id="exportBtn">Backup data</button>
+      <button class="secondary" id="importBtn">Restore backup</button>
+      <input id="importInput" type="file" accept="application/json" hidden>
+    </div>
+    <div class="actions"><button class="danger" id="resetBtn">Reset all data</button></div>
+  </section>
+  <p class="note">Your entries and photo are saved on this device in this browser. Use “Backup data” regularly and keep the backup somewhere safe. Clearing browser data, uninstalling/resetting the phone, or changing browsers can erase local data. This tracker does not sync to the cloud.</p>
+</main>
+<script>
+const KEY='myBulletDream_v1';
+let data={target:144000,entries:[],photo:null};
+const $=id=>document.getElementById(id);
+const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0});
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&typeof x==='object')data={...data,...x};}catch(e){}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function total(){return data.entries.reduce((s,e)=>s+e.amount,0)}
+function render(){
+ const s=total(),t=Math.max(1,Number(data.target)||1),r=Math.max(0,t-s),p=Math.min(100,s/t*100);
+ $('saved').textContent=money(s);$('targetLabel').textContent=money(t);$('remaining').textContent=money(r);
+ $('percent').textContent=p.toFixed(1)+'% of your target';$('fill').style.width=p+'%';
+ $('remainingText').textContent=s>=t?'🎉 Dream target reached!':money(r)+' left to your dream';
+ $('targetInput').value=t;
+ $('history').innerHTML=data.entries.length?data.entries.slice().reverse().map((e,i)=>`<div class="history"><span>${escapeHtml(e.date||'Savings entry')}</span><span class="plus">+ ${money(e.amount)}</span></div>`).join(''):'<div class="muted">Your entries will appear here.</div>';
+ if(data.photo){$('bikePhoto').src=data.photo;$('bikePhoto').style.display='block';$('placeholder').style.display='none'}else{$('bikePhoto').style.display='none';$('placeholder').style.display='block'}
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('saveTarget').onclick=()=>{const n=Number($('targetInput').value);if(!Number.isFinite(n)||n<=0)return alert('Enter a valid target amount.');data.target=Math.round(n);save()};
+$('addDeposit').onclick=()=>{const n=Number($('depositInput').value);if(!Number.isFinite(n)||n<=0)return alert('Enter a valid amount.');data.entries.push({amount:Math.round(n),date:new Date().toLocaleString()});$('depositInput').value='';save()};
+$('photoInput').onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>5*1024*1024)return alert('Please choose a photo under 5 MB.');const r=new FileReader();r.onload=()=>{data.photo=r.result;try{save()}catch(err){alert('Photo could not be saved. Try a smaller image.')}};r.readAsDataURL(f)};
+$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-bullet-dream-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('importBtn').onclick=()=>$('importInput').click();
+$('importInput').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x||!Array.isArray(x.entries)||!Number.isFinite(Number(x.target)))throw Error();data={target:Number(x.target),entries:x.entries.filter(v=>Number(v.amount)>0).map(v=>({amount:Number(v.amount),date:String(v.date||'Restored entry')})),photo:typeof x.photo==='string'?x.photo:null};save();alert('Backup restored.')}catch(err){alert('This backup file is not valid.')}};r.readAsText(f);e.target.value=''};
+$('resetBtn').onclick=()=>{if(confirm('Delete all savings, history and photo from this browser? Export a backup first if needed.')){data={target:144000,entries:[],photo:null};save()}};
+load();render();
+</script>
+</body>
+</html>
